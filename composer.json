@@ -1,6 +1,6 @@
 {
     "name": "nasermekky/config_manager",
-    "type": "project",
+    "type": "package",
     "license": "MIT",
     "autoload": {
         "psr-4": {
