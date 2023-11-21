@@ -1,0 +1,27 @@
+{
+    "name": "nasermekky/config_manager",
+    "type": "project",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "Nasermekky\\ConfigManager\\": "src/"
+        },
+        "files":[
+            "Helpers/Helper.php"
+        ]
+    },
+    "authors": [{
+        "name": "NaserMekky",
+        "email": "nasermekky11@gmail.com"
+    }],
+    "minimum-stability": "dev",
+    "require": {},
+    "extra": {
+        "laravel": {
+            "providers": [
+                "Nasermekky\\ConfigManager\\Providers\\ConfigManagerProvider"
+            ]
+        }
+    },
+
+}
