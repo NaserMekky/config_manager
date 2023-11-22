@@ -8,6 +8,18 @@
 </head>
 <body>
     <div class="container p-1">
+
+@if (session('message'))
+
+<div class="alert alert-{{  key(session('message')) == 'success' ? 'success':'danger' }}">
+
+{{-- $message[key(session('message'))] --}}
+{{session('message')[ key(session('message')) ] }}
+</div>
+
+@endif
+
+
         @if(config('quickadmin.add_config_key'))
         <button type="button" class="btn btn-primary m-1"
             data-toggle="modal"
@@ -17,13 +29,7 @@
             data-method="PUT">Add New Key</button>
         @endif
 
-        @isset($message)
-        @foreach ($message as $key=>$value)
-        <div class="alert alert-{{  $key == 'success' ? 'success':'danger' }}">
-            {{ $value }}
-        </div>
-        @endforeach
-        @endisset
+ 
 
         <select class="form-select" aria-label="">
             @foreach($options as $option)
@@ -188,7 +194,7 @@
             modal.find('#form').prop("action", action);
             modal.find('#method').val(method);
 
-            modal.find('.modal-title').text("Edit Config");
+            modal.find('.modal-title').text("Add Config Key");
         });
 
         $('#settings_edit').on('show.bs.modal', function (event) {
@@ -220,7 +226,7 @@
             modal.find('#form').prop("action", action);
             modal.find('#method').val(method);
 
-            modal.find('.modal-title').text("Edit Config");
+            modal.find('.modal-title').text("Edit Config Key");
         });
 
     </script>

@@ -20,8 +20,6 @@ class SettingsController extends Controller {
     }
 
 
-
-
     /**
     * Show the form for creating a new resource.
     */
@@ -34,12 +32,9 @@ class SettingsController extends Controller {
     */
     public function store(Request $request) {
         
-        $this->message = config_manager('quickadmin')
-        ->add(request('key'), request('value'));
-        session()->flash('message',$this->message);
-        return redirect('settings');
-        //return $this->index();
-
+       return back()->with('message', config_manager('quickadmin')
+        ->add(request('key'), request('value')));
+    
     }
 
     /**
@@ -63,16 +58,18 @@ class SettingsController extends Controller {
     * Update the specified resource in storage.
     */
     public function update(Request $request, string $key) {
-        $this->message = config_manager('quickadmin')->edit($key, request('value'));
-        return $this->index();
+    
+  return back()->with('message', config_manager('quickadmin')->edit($key, request('value')));
+       
     }
 
     /**
     * Remove the specified resource from storage.
     */
     public function destroy(string $key) {
-        $this->message = config_manager('quickadmin')->destroy($key);
-        return $this->index();
+       
+return back()->with('message', config_manager('quickadmin')->destroy($key));
+        
     }
 
     private function configToString($configPath) {

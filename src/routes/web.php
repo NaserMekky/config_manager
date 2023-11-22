@@ -5,7 +5,7 @@ use Nasermekky\ConfigManager\Controllers\SettingsController;
 use Nasermekky\Quickadmin\Controllers\Config;
 use Nasermekky\ConfigManager\Controllers\ConfigManager;
 
-
+Route::group(['middleware' => ['web']], function () { 
 
 Route::resource("settings", SettingsController::class);
 
@@ -18,3 +18,10 @@ Route::get('config', function () {
 
     
 });
+
+});
+
+
+
+
+
