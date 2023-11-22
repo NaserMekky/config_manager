@@ -72,42 +72,7 @@ return back()->with('message', config_manager('quickadmin')->destroy($key));
         
     }
 
-    private function configToString($configPath) {
-        return '<?php '.PHP_EOL.' return '
-        .str_replace(['array (', ')'], ['[', ']'],
-            var_export(config($configPath), true)). ';';
-    }
-
-    public function array_to_table($array) {
-        $table = '<table border="1">';
-        array_walk_recursive($array,
-            function($item, $key) use (&$table) {
-                $table .= "<tr><td>$key</td><td>$item</td></tr>";
-            }
-        );
-        $table .= '</table>';
-        return $table;
-    }
-
-
-    public function flattenArray($array, $prefix = '') {
-        $result = array();
-
-        foreach ($array as $key => $value) {
-            if (is_array($value)) {
-                $result = array_merge($result, $this->flattenArray($value, $prefix . $key . '.'));
-            } else {
-                $result[$prefix . $key] = $value;
-            }
-        }
-
-        return $result;
-    }
-
-
-
-
-
+    
 
 
 
