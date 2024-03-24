@@ -9,18 +9,18 @@
 <body>
     <div class="container p-1">
 
-@if (session('message'))
+        @if (session('message'))
 
-<div class="alert alert-{{  key(session('message')) == 'success' ? 'success':'danger' }}">
+        <div class="alert alert-{{  key(session('message')) == 'success' ? 'success':'danger' }}">
 
-{{-- $message[key(session('message'))] --}}
-{{session('message')[ key(session('message')) ] }}
-</div>
+            {{-- $message[key(session('message'))] --}}
+            {{session('message')[ key(session('message')) ] }}
+        </div>
 
-@endif
+        @endif
 
 
-        @if(config('quickadmin.add_config_key'))
+        @if(config('quickadmin.add_key_button'))
         <button type="button" class="btn btn-primary m-1"
             data-toggle="modal"
             data-target="#settings_add"
@@ -29,13 +29,13 @@
             data-method="PUT">Add New Key</button>
         @endif
 
- 
+
 
         <select class="form-select" aria-label="">
             @foreach($options as $option)
             <option value="{{ $option['value']}}">
-          {{ $option['text']}}
-          </option>
+                {{ $option['text']}}
+            </option>
             @endforeach
         </select>
 
@@ -49,6 +49,9 @@
             </thead>
             <tbody>
                 @forelse($settings as $key=>$value)
+                @continue( $key == "add_key_button")
+                @continue( $key == "selected_config_file")
+
                 <tr>
                     @php
                     $ss = explode('.', $key);
@@ -56,8 +59,6 @@
                     <td>{{ array_pop($ss) }}</td>
                     <td>{{ $value }}</td>
                     <td>
-
-
                         <button type="button" class="btn btn-primary btn-sm"
                             data-toggle="modal"
                             data-target="#settings_edit"
@@ -72,7 +73,6 @@
                             data-val=" {{$value}}"
                             data-action="{{ route('settings.destroy', $key) }}"
                             data-method="DELETE">Delete</button>
-
 
                     </td>
                 </tr>
@@ -97,12 +97,10 @@
                             </button>
                         </div>
                         <div class="modal-body">
-
                             <div class="form-group">
                                 <label for="value" class="col-form-label" id="l-key"></label>
                                 <input type="text" class="form-control" id="key" name="value">
                             </div>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -125,7 +123,6 @@
                             </button>
                         </div>
                         <div class="modal-body">
-
                             <div class="form-group">
                                 <label for="value" class="col-form-label" id="l-key">Key:</label>
                                 <input type="text" class="form-control" id="key" name="key">
@@ -144,26 +141,17 @@
             </div>
         </div>
 
+        {{-- Delete Modal --}}
         <div class="modal fade" id="settings_delete" tabindex="-1" role="dialog" aria-labelledby="settings ModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <form id="form" method="POST">
                         @csrf
                         <input type="hidden" id="method" name="_method" value="">
-                        {{-- <div class="modal-header">
-                            <h5 class="modal-title" id="exampleModalLabel"></h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <span aria-hidden="true">&times;</span>
-                            </button>
-                        </div>
-                        --}}
                         <div class="modal-body">
-
                             <div class="form-group">
                                 <label for="value" class="col-form-label text-primary"> Are you sure to delete <span class="l-delete text-danger font-weight-bold"></span> ?</label>
-
                             </div>
-
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -209,7 +197,6 @@
             modal.find('#key').val(value);
             modal.find('#form').prop("action", action);
             modal.find('#method').val(method);
-
             modal.find('.modal-title').text("Edit Config");
         });
 
@@ -225,8 +212,6 @@
             modal.find('#key').val(value);
             modal.find('#form').prop("action", action);
             modal.find('#method').val(method);
-
-            modal.find('.modal-title').text("Edit Config Key");
         });
 
     </script>

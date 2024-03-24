@@ -12,11 +12,15 @@ class SettingsController extends Controller {
     * Display a listing of the resource.
     */
     public function index() {
+        //  return response()->json(['naser'=>'mekky']);
+        return response()->json(['message'=>'success','data'=>config_manager(request('option'))->all()]);
+        /*
         return view("config_manager::settings.index", [
             'settings' => config_manager('quickadmin')->all(),
             "message" => $this->message,
             'options' => config_manager('quickadmin')->configFiles()
         ]);
+        */
     }
 
 
@@ -31,10 +35,11 @@ class SettingsController extends Controller {
     * Store a newly created resource in storage.
     */
     public function store(Request $request) {
-        
-       return back()->with('message', config_manager('quickadmin')
-        ->add(request('key'), request('value')));
-    
+        return response()->json(['message'=>config_manager('quickadmin')->add(request('key'), request('value'))]);
+
+        return back()->with('message', config_manager('quickadmin')
+            ->add(request('key'), request('value')));
+
     }
 
     /**
@@ -57,23 +62,23 @@ class SettingsController extends Controller {
     /**
     * Update the specified resource in storage.
     */
-    public function update(Request $request, string $key) {
-    
-  return back()->with('message', config_manager('quickadmin')->edit($key, request('value')));
-       
+    public function update() {
+        return response()->json(['message'=>config_manager('quickadmin')->edit(request('key'), request('value'))]);
+        
+        return back()->with('message', config_manager('quickadmin')->edit($key, request('value')));
     }
 
     /**
     * Remove the specified resource from storage.
     */
-    public function destroy(string $key) {
-       
-return back()->with('message', config_manager('quickadmin')->destroy($key));
-        
+    public function destroy() {
+        //return response()->json(["hhh"=> "nnnnn"]);
+        return response()->json(['message'=>
+            config_manager( config('quickadmin.selected_config_file'))
+            ->destroy(request('key'))]);
+            
+        return back()->with('message', config_manager('quickadmin')->destroy($key));
+
     }
-
-    
-
-
 
 }
