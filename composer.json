@@ -1,4 +1,4 @@
-!{
+{
     "name": "nasermekky/config_manager",
     "type": "package",
     "license": "MIT",
@@ -7,7 +7,7 @@
             "Nasermekky\\ConfigManager\\": "src/"
         },
         "files":[
-            "Helpers/Helper.php"
+            "src/Helpers/Helper.php"
         ]
     },
     "authors": [{

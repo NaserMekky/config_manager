@@ -21,11 +21,12 @@ class ConfigManagerProvider extends ServiceProvider
     {
         $this->loadViewsFrom(__DIR__.'/../views', 'config_manager');
         $this->loadRoutesFrom(__DIR__.'/../routes/web.php');
-        
+
         // Publishes Files
         $this->publishes([
             __DIR__.'/../Helpers/Helper.php' => app_path('/Helpers/Helper.php'),
         ],'HelperConfig');
-        
+
+        require_once __DIR__."/../Helpers/Helper.php";
     }
 }
