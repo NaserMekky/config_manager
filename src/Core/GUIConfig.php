@@ -2,6 +2,7 @@
 
 namespace Nasermekky\ConfigManager\Core;
 
+use Illuminate\Support\Facades\File;
 use Nasermekky\ConfigManager\Core\Repo;
 
 class GUIConfig extends Repo
@@ -9,14 +10,13 @@ class GUIConfig extends Repo
 
     public function getData()
     {
-        if (file_exists(config_path($this->configName . '.php'))) {
+        if (file_exists($this->path)) {
             return $this->flattenArray($this->items);
         }
-        throw new \Exception("This File Config\\$this->configName.php Not Found.!");
-
+        throw new \Exception("This File [ $this->path ] Not Found.!");
     }
 
-   
+
     /**
      * The 'configFiles' method returns a list of all PHP files from the 'config' directory.
      *
@@ -25,35 +25,37 @@ class GUIConfig extends Repo
     public function configFiles()
     {
         // Get a list of all files in the config directory
-        $files = glob(config_path('*.php'));
+        $files = File::allFiles(config_path());
 
         // Convert the file names to options for a select form
         return array_map(function ($file) {
+            $slice =  array_slice(explode('/', $file->getPathname()), -2, 2);
             return [
-                'value' => $file,
-                'text' => basename($file, '.php'),
+                'text' => $slice[0] . '/' . basename($slice[1], '.php'),
+                'value' => $file->getPathname(),
             ];
         }, $files);
-
     }
 
     /**
-     * The 'save' method is responsible for saving the configuration data to the configuration file.
-     * It uses the `config` function provided by Laravel and `file_put_contents` to write the configuration file.
+     * The 'langFiles' method returns a list of all PHP files from the 'lang' directory.
      *
-     * @return bool
+     * @return array
      */
-
-    /*  private function save()
+    public function langFiles()
     {
-    if (File::put(
-    config_path($this->configName . '.php'),
-    $this->configToString())) {
-    return true;
-    }
-    return false;
-    } */
+        // Get a list of all files in the lang directory
+        $files = File::allFiles(lang_path());
 
+        // Convert the file names to options for a select form
+        return array_map(function ($file) {
+            $slice =  array_slice(explode('/', $file->getPathname()), -2, 2);
+            return [
+                'text' => $slice[0] . '/' . basename($slice[1], '.php'),
+                'value' => $file->getPathname(),
+            ];
+        }, $files);
+    }
     /**
      * The 'flattenArray' method takes an array and recursively
      * converts it into a single-dimensional array.
@@ -65,7 +67,7 @@ class GUIConfig extends Repo
      */
     private function flattenArray($array, $prefix = '')
     {
-        $result = array();
+        $result = [];
         foreach ($array as $key => $value) {
             if (is_array($value)) {
                 $result = array_merge($result, $this->flattenArray($value, $prefix . $key . '.'));
@@ -75,14 +77,6 @@ class GUIConfig extends Repo
         }
         return $result;
     }
-
-    /*
-    private function configToString()
-    {
-    return '<?php ' . PHP_EOL . ' return '
-    . str_replace(['array (', ')'], ['[', ']'],
-    var_export($this->items, true)) . ';';
-    } */
 
     /**
      * Create a response array
@@ -99,5 +93,4 @@ class GUIConfig extends Repo
             'data' => $data,
         ];
     }
-
 }

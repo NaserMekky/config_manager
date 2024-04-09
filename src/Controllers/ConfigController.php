@@ -15,7 +15,8 @@ class ConfigController extends Controller
     {
         return view(
             "config_manager::configs.index",
-            ['configFiles' => config_manager('app')->configFiles()]
+            ['configFiles' => config_manager(config_path('app'))->configFiles(),
+            'langFiles' => config_manager(lang_path('en/auth'))->langFiles()]
         );
     }
 

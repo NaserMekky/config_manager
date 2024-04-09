@@ -25,14 +25,22 @@
       </div>
     </div> --}}
 
-    <select class="dropdown" id="mySelect" name="configName">
+    <select class=" p-2 bg-info text-white" id="mySelect" name="configName">
 
-      @foreach ($configFiles as $file)
-        <option value="{{ $file['text'] }}"
-          {{ $file['text'] == config('quickadmin.selected_config_file') ? 'selected' : '' }}>
-          {{ $file['text'] }}
-        </option>
-      @endforeach
+      <optgroup class="text-dark" label="## Config Files ##">
+        @foreach ($configFiles as $file)
+          <option class="text-white" value="{{ $file['value'] }}">
+            {{ $file['text'] }}
+          </option>
+        @endforeach
+      </optgroup>
+      <optgroup class="text-dark" label="## Lang Files ##">
+        @foreach ($langFiles as $lang)
+          <option  class="text-white" value="{{ $lang['value'] }}">
+            {{ $lang['text'] }}
+          </option>
+        @endforeach
+      </optgroup>
     </select>
 
     <button class="btn btn-success mb-1" data-toggle="modal" data-target="#addModal">Add Key</button>
@@ -148,10 +156,11 @@
       }
 
       function handleError(err) {
+        console.log(err.responseJSON)
         $("#message").removeClass('alert-success alert-danger')
           .addClass("alert-danger")
-          .text(err).show()
-          .delay(10000).fadeOut();
+          .text(err.responseJSON.message).show()
+          .delay(12000).fadeOut();
       }
 
       function getConfigData(configName) {
@@ -223,7 +232,8 @@
           },
           handleSuccess
         );
-
+        $("#newKey").val('')
+        $("#newValue").val('')
         $("#addModal").modal('hide');
       });
 

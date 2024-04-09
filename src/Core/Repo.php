@@ -10,19 +10,19 @@ use Illuminate\Support\Facades\File;
 class Repo extends Repository
 {
 
-    // Define the configName property, which will store the name of the configuration
-    protected $configName;
+    // Define the path of the configuration
+    protected $path;
 
     /**
-     * The constructor of the Repo class, which takes a configName parameter to initialize the configName property.
-     * It also calls the parent constructor with the configuration data of the given configName.
+     * The constructor of the Repo class, which takes a path parameter to initialize the path property.
+     * It also calls the parent constructor with the configuration data of the given path.
      *
-     * @param string $configName
+     * @param string $path
      */
-    public function __construct($configName)
+    public function __construct($path)
     {
-        $this->configName = $configName;
-        parent::__construct(Config::get($configName, []));
+        $this->path = str_ends_with($path, '.php') ? $path : $path . '.php';
+        parent::__construct(require($this->path));
     }
     /**
      * The add method, which adds a new key-value pair to the configuration data.
@@ -47,10 +47,7 @@ class Repo extends Repository
     }
 
     /**
-     * The edit method, which edits an existing key-value pair in the configuration data.
-     * It checks if the key exists, and if it does, it edits the key-value pair and saves the configuration data.
-     * If the configuration data is saved successfully, it returns true.
-     * If the key does not exist, it throws an exception.
+     * It edits an existing key-value pair in the configuration data.
      *
      * @param string $key
      * @param mixed $value
@@ -72,7 +69,7 @@ class Repo extends Repository
     }
 
     /**
-     * The delete method, which deletes an existing key-value pair from the configuration data.
+     * It deletes an existing key-value pair from the configuration data.
      *
      * @param string $key
      * @return bool
@@ -91,7 +88,7 @@ class Repo extends Repository
     }
 
     /**
-     * The unset method, which unsets an existing key-value pair from the configuration data.
+     * Unset a configuration option.
      *
      * @param string $key
      */
@@ -102,18 +99,17 @@ class Repo extends Repository
 
     /**
      * The configToString method, which converts the configuration data to a string representation.
-     * It returns a string representation of the configuration data, which can be written to a file.
      *
      * @return string
      */
     private function configToString()
     {
         return '<?php ' . PHP_EOL . ' return '
-        . str_replace(
-            ['array (', ')'],
-            ['[', ']'],
-            var_export($this->items, true)
-        ) . ';';
+            . str_replace(
+                ['array (', ')'],
+                ['[', ']'],
+                var_export($this->items, true)
+            ) . ';';
     }
 
     /**
@@ -123,8 +119,9 @@ class Repo extends Repository
      */
     private function save()
     {
-        if (File::put(
-            config_path($this->configName . '.php'),
+        // dd($this->path);
+        if (file_put_contents(
+            $this->path,
             $this->configToString()
         )) {
             return true;
@@ -132,12 +129,13 @@ class Repo extends Repository
         return false;
     }
 
-    private function is_boolean($value){
+    private function is_boolean($value)
+    {
         if (preg_match('/^(true|1)$/i', $value)) {
             return true;
-        }elseif (preg_match('/^(false|0)$/i', $value)) {
+        } elseif (preg_match('/^(false|0)$/i', $value)) {
             return false;
-        }elseif (preg_match('/^(null)$/i', $value)) {
+        } elseif (preg_match('/^(null)$/i', $value)) {
             return null;
         }
         return $value;
