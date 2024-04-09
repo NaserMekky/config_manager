@@ -1,6 +1,6 @@
 
 # config-manager
-Add Or Edit And Delete key/value  pairs in a configuration file.
+Add Or Edit And Delete key/value  pairs in a configuration files and language files.
 And Save changes to the configuration file in script.
 
 ## Installing
@@ -17,7 +17,10 @@ You can also use the repository `Nasermekky\ConfigManager\Core\Repo` which works
 
 Example:
 ```
-$config = new Nasermekky\ConfigManager\Core\Repo('app'); // loading the config from config/app.php
+use Nasermekky\ConfigManager\Core\Repo;
+
+$config = new Repo(config_path('app')); // Pass full path for file with extension or without
+// $lang = new Repo(lang_path('en/auth'));
 
 $config->edit('debug', false); // set the config you wish
 
